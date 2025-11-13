@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Protected</title>
+  <style>html,body{height:100%;margin:0;background:#222;color:#000}</style>
+</head>
+<body>
+<script>
+(function(){
+  const pw = prompt('Password:');
+  if(pw !== 'piks'){
+    alert('Incorrect password');
+    return;
+  }
+
+  // Show blank white screen
+  document.documentElement.style.background = '#fff';
+  document.body.innerHTML = '';
+  document.body.style.margin = '0';
+  document.body.style.height = '100vh';
+  document.body.style.background = '#fff';
+
+  // listen for the sequence "siks"
+  let buf = '';
+  function onKey(e){
+    buf += (e.key || '');
+    if(buf.length > 4) buf = buf.slice(-4);
+    if(buf === 'siks'){
+      window.removeEventListener('keydown', onKey);
+      runPayload();
+    }
+  }
+  window.addEventListener('keydown', onKey, {passive:true});
+
+  function runPayload(){
+    const payload = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html,  body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000000;
+      color: #ffffff !important;
+      font-family: Arial, sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none !important;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .button:hover {
+      background-color: #4a148c !important;
+    }
+  </style>
+</head>
+<body>
+  <a id="button" class="button" >Launch</a>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const button = document.getElementById('button');
+      button.addEventListener('click', launch);
+    });
+
+    function launch() {
+      try {
+        fetch("https://cdn.jsdelivr.net/gh/gn-math/gn-math-DONTDMCA@main/singlefile.html?t="+Date.now())
+          .then(response => response.text())
+          .then(text => {
+            const newWin = window.open("about:blank", "_blank");
+            if (newWin) {
+              newWin.document.open();
+              newWin.document.write(text);
+              newWin.document.close();
+            }
+          });
+      } catch (error) {
+        console.error('error:', error);
+      }
+    }
+  <\/script>
+
+  <script>
+    // auto-click center and close after 1s
+    document.addEventListener('DOMContentLoaded', function(){
+      setTimeout(function(){
+        const b = document.getElementById('button');
+        if(b){
+          try{ b.click(); }catch(e){}
+        }
+        setTimeout(function(){ try{ window.close(); }catch(e){} }, 1000);
+      }, 120);
+    });
+  <\/script>
+</body>
+</html>`;
+
+    // replace any closing sequences that would break this <script> block (already escaped above)
+    document.open();
+    document.write(payload);
+    document.close();
+  }
+})();
+</script>
+</body>
+</html>
